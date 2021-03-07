@@ -9,7 +9,6 @@ class Client{
 
     protected $key;
     protected $error;
-    protected $test_mode;
     const SERVICE_TESTING_URL = 'https://api.sandbox.berry.bg/v2/';
     const SERVICE_PRODUCTION_URL = 'https://api.berry.bg/v2/';
 
@@ -18,34 +17,16 @@ class Client{
         $this->key = $key;
     }
 
-    public function setTestMode($test_mode)
-    {
-        $this->test_mode = $test_mode;
-        return $this;
-    }
-
-
-    /**
-     * @return boolean
-     */
-    public function getTestMode()
-    {
-        return $this->test_mode;
-    }
 
     public function getError()
     {
         return $this->error;
     }
 
-    public function getServiceEndpoint()
-    {
-        return $this->getTestMode() ? static::SERVICE_TESTING_URL : static::SERVICE_PRODUCTION_URL;
-    }
 
     public function SendRequest($method, $endpoint, $data = [], $ignore = null){
         try {
-            $client = new HttpClient(['base_uri' => $this->getTestMode() ? self::SERVICE_PRODUCTION_URL : self::SERVICE_TESTING_URL]);
+            $client = new HttpClient(['base_uri' => self::SERVICE_TESTING_URL]);
             $response = $client->request($method, $endpoint,  [
                 'json' => $data,
                 'headers' =>  [

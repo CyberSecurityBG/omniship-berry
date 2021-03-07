@@ -26,7 +26,7 @@ class CreateBillOfLadingRequest extends AbstractRequest
             $SenderAddressline2 .= !is_null($SenderAddress->getEntrance()) ? $SenderAddress->getEntrance() . ', ' : '';
             $SenderAddressline2 .= !is_null($SenderAddress->getFloor()) ? $SenderAddress->getFloor() . ', ' : '';
             $SenderAddressline2 .= !is_null($SenderAddress->getApartment()) ? $SenderAddress->getApartment() : '';
-            $SenderNote = $SenderAddress->getNote() ? implode(',', $SenderAddress->getNote()) : '';
+            $SenderNote = $SenderAddress->getNote() ? $SenderAddress->getNote() : '';
             $pickup = [
                 'address' => [
                     'line1' => $SenderAddressline1,
@@ -49,17 +49,17 @@ class CreateBillOfLadingRequest extends AbstractRequest
         $Receiverline2 .= !is_null($ReceiverAddress->getEntrance()) ? $ReceiverAddress->getEntrance().', ' : '';
         $Receiverline2 .= !is_null($ReceiverAddress->getFloor()) ? $ReceiverAddress->getFloor().', ' : '';
         $Receiverline2 .= !is_null($ReceiverAddress->getApartment()) ? $ReceiverAddress->getApartment() : '';
-        $ReceiverNote =   $ReceiverAddress->getNote() ? implode(',', $ReceiverAddress->getNote()) : '';
+        $ReceiverNote =   $ReceiverAddress->getNote() ? $ReceiverAddress->getNote() : '';
 
         $DropoffStart = !is_null($this->getOtherParameters('dropoff')) ? json_decode($this->getOtherParameters('dropoff')) : '';
         $items = [];
-        foreach($this->getPieces() as $piece){
+        foreach($this->getItems() as $piece){
             $items[] = [
                 'id' => $piece->id,
-                'width' => $piece->width,
-                'height' => $piece->height,
-                'depth' => $piece->depth,
-                'weight' => $piece->weight
+                'width' => (float)$piece->width,
+                'height' => (float)$piece->height,
+                'depth' => (float)$piece->depth,
+                'weight' => (int)$piece->weight
             ];
         }
         $data['job']['packages'][] = [

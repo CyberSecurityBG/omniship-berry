@@ -16,7 +16,8 @@ class Gateway extends AbstractGateway
 {
 
     private $name = 'Berry';
-    CONST TRACKING_URL = 'https://sandbox.berry.bg/bg/t/';
+    const TRACKING_URL = 'https://sandbox.berry.bg/bg/t/';
+
     /**
      * @return stringc
      */
@@ -70,6 +71,8 @@ class Gateway extends AbstractGateway
         if (is_null($this->client)) {
             $this->client = new Client($this->getKey());
         }
+        $this->client->setTestMode((bool)$this->getTestMode());
+
         return $this->client;
     }
 

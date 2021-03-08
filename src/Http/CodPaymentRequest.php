@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: joro
- * Date: 10.5.2017 г.
- * Time: 16:55 ч.
- */
 
-namespace Omniship\Econt\Http;
+namespace Omniship\Berry\Http;
 
 class CodPaymentRequest extends AbstractRequest
 {
@@ -15,16 +9,19 @@ class CodPaymentRequest extends AbstractRequest
      * @return integer
      */
     public function getData() {
-        return $this->getBolId();
+        $explode_id = explode('|', $this->getBolId());
+        return [
+            'bol_id' => $explode_id[1],
+        ];
     }
 
     /**
-     * @param mixed $bol_id
-     * @return CodPaymentResponse
+     * @param mixed $data
+     * @return CancelBillOfLadingResponse
      */
-    public function sendData($bol_id) {
-        $response = $bol_id ? $this->getClient()->codPayment($bol_id) : null;
-        return $this->createResponse(!$response && $this->getClient()->getError() ? $this->getClient()->getError() : $response);
+    public function sendData($data) {
+        $query = $this->getClient()->SendRequest('get', '/jobs/'.$data['bol_id']);
+        return $this->createResponse($query);
     }
 
     /**

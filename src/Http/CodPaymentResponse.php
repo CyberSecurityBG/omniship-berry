@@ -6,7 +6,7 @@
  * Time: 17:22 ч.
  */
 
-namespace Omniship\Econt\Http;
+namespace Omniship\Berry\Http;
 
 use Carbon\Carbon;
 use Omniship\Common\CodPayment;
@@ -25,16 +25,19 @@ class CodPaymentResponse extends AbstractResponse
      */
     public function getData()
     {
-        if(!is_null($this->getCode()) || empty($this->data) || is_null($this->data->getCdSendTime())) {
-            return null;
+        if(!$this->data){
+            return $this->data;
         }
-
-        $cod_payment = new CodPayment([
-            'id' => $this->getRequest()->getBolId(),
-            'date' => !empty($this->data->getCdSendTime()) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->data->getCdSendTime(), 'Europe/Sofia') : null,
-            'price' => $this->data->getCdSendSum()
-        ]);
-        return $cod_payment;
+        if($this->data->packages[0]->status == 'delivered') {
+            $date = date_format(date_create($this->data->ended_at), 'Y-m-d H:i:s');
+            $cod_payment = new CodPayment([
+                'id' => $this->getRequest()->getBolId(),
+                'date' => !empty($date) ? Carbon::createFromFormat('Y-m-d H:i:s',$date, 'Europe/Sofia') : null,
+                'price' => $this->data->packages[0]->cod
+            ]);
+            return $cod_payment;
+        }
+        return null;
     }
 
 }

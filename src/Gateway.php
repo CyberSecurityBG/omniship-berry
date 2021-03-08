@@ -10,12 +10,13 @@ use Omniship\Berry\Http\ServicesRequest;
 use Omniship\Berry\Http\CancelBillOfLadingRequest;
 use Omniship\Berry\Http\GetPdfRequest;
 use Omniship\Berry\Http\TrackingParcelRequest;
+use Omniship\Berry\Client;
 
 class Gateway extends AbstractGateway
 {
 
     private $name = 'Berry';
-    CONST TRACKING_URL = '';
+    CONST TRACKING_URL = 'https://sandbox.berry.bg/bg/t/';
     /**
      * @return stringc
      */
@@ -64,6 +65,14 @@ class Gateway extends AbstractGateway
         return $this->getParameter('endpoint');
     }
 
+    public function getClient()
+    {
+        if (is_null($this->client)) {
+            $this->client = new Client($this->getKey());
+        }
+        return $this->client;
+    }
+
     /**
      * @param $value
      * @return $this
@@ -78,7 +87,7 @@ class Gateway extends AbstractGateway
     }
 
 
-    public function validateCredentials(array $parameters = [], $test_mode = null)
+    public function validateCredentials(array $parameters = [])
     {
         return $this->createRequest(ValidateCredentialsRequest::class, $parameters);
     }
@@ -129,7 +138,7 @@ class Gateway extends AbstractGateway
     public function trackingUrl($parcel_id)
     {
         $explode = explode('|', $parcel_id);
-        return sprintf(static::TRACKING_URL, $explode);
+        return static::TRACKING_URL.$explode[0];
     }
 
     public function trackingParcel($bol_id)

@@ -71,6 +71,7 @@ class Gateway extends AbstractGateway
         if (is_null($this->client)) {
             $this->client = new Client($this->getKey());
         }
+
         $this->client->setTestMode((bool)$this->getTestMode());
 
         return $this->client;

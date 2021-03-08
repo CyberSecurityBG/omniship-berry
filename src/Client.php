@@ -58,7 +58,7 @@ class Client
             ]);
 
             return json_decode($response->getBody()->getContents());
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { 
             if($ignore && $ignore == $e->getCode()){
                 return true;
             }

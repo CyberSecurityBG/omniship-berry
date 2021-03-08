@@ -17,7 +17,9 @@ class Gateway extends AbstractGateway
 {
 
     private $name = 'Berry';
-    const TRACKING_URL = 'https://sandbox.berry.bg/bg/t/';
+    protected $test_mode = false;
+    const TRACKING_URL_DEV = 'https://sandbox.berry.bg/bg/t/';
+    const TRACKING_URL = 'https://berry.bg/bg/t/';
 
     /**
      * @return stringc
@@ -25,6 +27,20 @@ class Gateway extends AbstractGateway
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setTestMode($test_mode)
+    {
+        $this->test_mode = $test_mode;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getTestMode()
+    {
+        return $this->test_mode;
     }
 
     /**
@@ -143,7 +159,7 @@ class Gateway extends AbstractGateway
     public function trackingUrl($parcel_id)
     {
         $explode = explode('|', $parcel_id);
-        return static::TRACKING_URL.$explode[0];
+        return $this->getTestMode() ? static::TRACKING_URL_DEV.$explode[0] : static::TRACKING_URL.$explode[0];
     }
 
     public function trackingParcel($bol_id)

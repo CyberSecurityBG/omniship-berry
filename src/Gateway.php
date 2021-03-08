@@ -18,6 +18,7 @@ class Gateway extends AbstractGateway
 
     private $name = 'Berry';
     protected $test_mode = false;
+    protected $client;
     const TRACKING_URL_DEV = 'https://sandbox.berry.bg/bg/t/';
     const TRACKING_URL = 'https://berry.bg/bg/t/';
 

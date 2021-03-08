@@ -2,6 +2,7 @@
 
 namespace Omniship\Berry;
 
+use Omniship\Berry\Http\CodPaymentRequest;
 use Omniship\Common\AbstractGateway;
 use Omniship\Berry\Http\ValidateCredentialsRequest;
 use Omniship\Berry\Http\ShippingQuoteRequest;
@@ -148,5 +149,10 @@ class Gateway extends AbstractGateway
     public function trackingParcel($bol_id)
     {
         return $this->createRequest(TrackingParcelRequest::class, $this->setBolId($bol_id)->getParameters());
+    }
+
+    public function codPayment($bol_id)
+    {
+        return $this->createRequest(CodPaymentRequest::class, $this->setBolId($bol_id)->getParameters());
     }
 }

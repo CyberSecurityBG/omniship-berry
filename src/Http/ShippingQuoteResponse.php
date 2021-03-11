@@ -13,13 +13,14 @@ class ShippingQuoteResponse extends AbstractResponse
         }
         $result = new ShippingQuoteBag();
         $services =  $this->getClient()->SendRequest('get', 'packages/next_available_slots?count=6');
-        foreach($services as $service) {
-            $Date = date_format(date_create($service[0]), 'd.m.Y');
-            $From = date_format(date_create($service[0]), 'H:i');
-            $To = date_format(date_create($service[1]), 'H:i');
+        foreach($services as $service){
+            $ServivePickUp = Carbon::createFromTimeString($service[0], 'UTC');
+            $ServivePickUp->setTimezone('Europe/Sofia');
+            $ServiceDropOff = Carbon::createFromTimeString($service[1], 'UTC');
+            $ServiceDropOff->setTimezone('Europe/Sofia');
             $result->push([
                 'id' => json_encode($service),
-                'name' => 'Доставка на '.$Date.' от '.$From.' до '.$To.' ('.count($this->data->packages).' пакета)',
+                'name' => 'Доставка на '.$ServivePickUp->format('d.m.Y').' от '.$ServivePickUp->format('H:i').' до '.$ServiceDropOff->format('H:i').' ('.count($this->data->packages).' пакет/а)',
                 'description' => null,
                 'price' => $this->data->pricing->total_gross,
                 'pickup_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),

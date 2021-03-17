@@ -50,8 +50,11 @@ class CreateBillOfLadingRequest extends AbstractRequest
         $Receiverline2 .= !is_null($ReceiverAddress->getFloor()) ? $ReceiverAddress->getFloor().', ' : '';
         $Receiverline2 .= !is_null($ReceiverAddress->getApartment()) ? $ReceiverAddress->getApartment() : '';
         $ReceiverNote =   $ReceiverAddress->getNote() ? $ReceiverAddress->getNote() : '';
-
-        $DropoffStart = !is_null($this->getOtherParameters('dropoff')) ? json_decode($this->getOtherParameters('dropoff')) : '';
+        $DropoffStart = !is_null($this->getOtherParameters('dropoff')) ? explode('__', $this->getOtherParameters('dropoff')) : '';
+        $NewDropOffStart = explode('_', $DropoffStart[0]);
+        $NewDropOffEnd = explode('_', $DropoffStart[1]);
+        $DropOffStart_Formated = date_format(date_create($NewDropOffStart[0].' '.str_replace('-', ':', $NewDropOffStart[1])), 'Y-m-d\TH:i:s.000\Z');
+        $DropOffEnd_Formated = date_format(date_create($NewDropOffEnd[0].' '.str_replace('-', ':', $NewDropOffEnd[1])), 'Y-m-d\TH:i:s.000\Z');
         $items = [];
         foreach($this->getItems() as $piece){
             $items[] = [
@@ -82,8 +85,8 @@ class CreateBillOfLadingRequest extends AbstractRequest
                 'cod' => $this->getCashOnDeliveryAmount() ?? '',
                 'reference_id' => $this->getOtherParameters('order'),
                 'description' => $this->getContent(),
-                'dropoff_window_start' => $DropoffStart[0],
-                'dropoff_window_end' => $DropoffStart[1],
+                'dropoff_window_start' => $DropOffStart_Formated,
+                'dropoff_window_end' => $DropOffEnd_Formated,
                 'items' => $items
             ]
         ];

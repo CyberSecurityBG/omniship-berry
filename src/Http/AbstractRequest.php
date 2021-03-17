@@ -27,10 +27,8 @@ abstract class AbstractRequest extends BaseAbstractRequest
     public function getClient()
     {
         if(is_null($this->client)) {
-            $this->client = new BerryClient($this->getKey(), $this->getTestMode());
+            $this->client = new BerryClient($this->getKey());
         }
-
-        $this->client->setTestMode((bool)$this->getTestMode());
 
         return $this->client;
     }

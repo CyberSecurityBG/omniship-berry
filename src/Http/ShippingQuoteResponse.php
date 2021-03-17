@@ -15,11 +15,13 @@ class ShippingQuoteResponse extends AbstractResponse
         $services =  $this->getClient()->SendRequest('get', 'packages/next_available_slots?count=6');
         foreach($services as $service){
             $ServivePickUp = Carbon::createFromTimeString($service[0], 'UTC');
+            $ServiceId =  $ServivePickUp->format('Y-m-d_H-i');
             $ServivePickUp->setTimezone('Europe/Sofia');
             $ServiceDropOff = Carbon::createFromTimeString($service[1], 'UTC');
+            $ServiceId = $ServiceId.'__'.$ServiceDropOff->format('Y-m-d_H-i');
             $ServiceDropOff->setTimezone('Europe/Sofia');
             $result->push([
-                'id' => json_encode($service),
+                'id' => $ServiceId,
                 'name' => 'Доставка на '.$ServivePickUp->format('d.m.Y').' от '.$ServivePickUp->format('H:i').' до '.$ServiceDropOff->format('H:i').' ('.count($this->data->packages).' пакет/а)',
                 'description' => null,
                 'price' => $this->data->pricing->total_gross,

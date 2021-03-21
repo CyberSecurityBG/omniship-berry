@@ -28,12 +28,12 @@ class CodPaymentResponse extends AbstractResponse
         if(!$this->data){
             return $this->data;
         }
-        if($this->data->packages[0]->status == 'delivered') {
+        if($this->data->packages[0]->cod_amount_paid_out == $this->data->packages[0]->cod) {
             $date = date_format(date_create($this->data->ended_at), 'Y-m-d H:i:s');
             $cod_payment = new CodPayment([
                 'id' => $this->getRequest()->getBolId(),
                 'date' => !empty($date) ? Carbon::createFromFormat('Y-m-d H:i:s',$date, 'Europe/Sofia') : null,
-                'price' => $this->data->packages[0]->cod
+                'price' => $this->data->packages[0]->cod_amount_paid_out
             ]);
             return $cod_payment;
         }

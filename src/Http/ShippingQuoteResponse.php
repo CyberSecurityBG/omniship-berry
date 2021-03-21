@@ -13,22 +13,43 @@ class ShippingQuoteResponse extends AbstractResponse
         }
         $result = new ShippingQuoteBag();
         $services =  $this->getClient()->SendRequest('get', 'packages/next_available_slots?count=6');
-        foreach($services as $service){
-            $ServivePickUp = Carbon::createFromTimeString($service[0], 'UTC');
-            $ServiceId =  $ServivePickUp->format('Y-m-d_H-i');
-            $ServivePickUp->setTimezone('Europe/Sofia');
-            $ServiceDropOff = Carbon::createFromTimeString($service[1], 'UTC');
-            $ServiceId = $ServiceId.'__'.$ServiceDropOff->format('Y-m-d_H-i');
-            $ServiceDropOff->setTimezone('Europe/Sofia');
+        if($this->data->is_service == 1) {
+            foreach ($services as $service) {
+                $ServivePickUp = Carbon::createFromTimeString($service[0], 'UTC');
+                $ServiceId = $ServivePickUp->format('Y-m-d_H-i');
+                $ServivePickUp->setTimezone('Europe/Sofia');
+                $ServiceDropOff = Carbon::createFromTimeString($service[1], 'UTC');
+                $ServiceId = $ServiceId . '__' . $ServiceDropOff->format('Y-m-d_H-i');
+                $ServiceDropOff->setTimezone('Europe/Sofia');
+                $result->push([
+                    'id' => $ServiceId,
+                    'name' => 'Доставка на ' . $ServivePickUp->format('d.m.Y') . ' от ' . $ServivePickUp->format('H:i') . ' до ' . $ServiceDropOff->format('H:i') . ' (' . count($this->data->packages) . ' пакет/а)',
+                    'description' => null,
+                    'price' => $this->data->pricing->total_gross,
+                    'pickup_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
+                    'pickup_time' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
+                    'delivery_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($service[0]), 'd.m.Y')),
+                    'delivery_time' => Carbon::createFromFormat('d.m.Y', date_format(date_create($service[0]), 'd.m.Y')),
+                    'currency' => $this->data->pricing->currency,
+                    'tax' => null,
+                    'insurance' => 0,
+                    'exchange_rate' => null,
+                    'payer' => 'SENDER',
+                    'allowance_fixed_time_delivery' => false,
+                    'allowance_cash_on_delivery' => true,
+                    'allowance_insurance' => false,
+                ]);
+            }
+        } else {
             $result->push([
-                'id' => $ServiceId,
-                'name' => 'Доставка на '.$ServivePickUp->format('d.m.Y').' от '.$ServivePickUp->format('H:i').' до '.$ServiceDropOff->format('H:i').' ('.count($this->data->packages).' пакет/а)',
+                'id' => 1,
+                'name' => 'Доставка до адрес',
                 'description' => null,
                 'price' => $this->data->pricing->total_gross,
                 'pickup_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
                 'pickup_time' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
-                'delivery_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($service[0]), 'd.m.Y')),
-                'delivery_time' => Carbon::createFromFormat('d.m.Y', date_format(date_create($service[0]), 'd.m.Y')),
+                'delivery_date' => null,
+                'delivery_time' => null,
                 'currency' => $this->data->pricing->currency,
                 'tax' => null,
                 'insurance' => 0,

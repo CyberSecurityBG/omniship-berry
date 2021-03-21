@@ -11,7 +11,7 @@ class ShippingQuoteRequest extends AbstractRequest
         $SenderAddress = $this->getSenderAddress();
         if(!is_null($SenderAddress->getId())){
             $pickup = [
-                'warehouse' => '831e45f5-b668-447a-9655-177d49467437'
+                'warehouse' => $SenderAddress->getId()
             ];
         } else {
             $SenderAddressline1 = $SenderAddress->getCity()->getName().', ';
@@ -87,6 +87,7 @@ class ShippingQuoteRequest extends AbstractRequest
     public function sendData($data)
     {
         $query = $this->getClient()->SendRequest('post', 'jobs/inquire', $data);
+        $query->is_service = $this->getOtherParameters('is_services');
         return $this->createResponse($query);
     }
 

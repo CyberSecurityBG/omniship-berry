@@ -17,7 +17,7 @@ class CreateBillOfLadingRequest extends AbstractRequest
         $SenderAddress = $this->getSenderAddress();
         if($SenderAddress->getId()){
             $pickup = [
-                'warehouse' => '831e45f5-b668-447a-9655-177d49467437'
+                'warehouse' => $SenderAddress->getId()
             ];
         } else {
             $SenderAddressline1 = $SenderAddress->getStreet()->getName() . ' ' . $SenderAddress->getStreetNumber();
@@ -51,10 +51,16 @@ class CreateBillOfLadingRequest extends AbstractRequest
         $Receiverline2 .= !is_null($ReceiverAddress->getApartment()) ? $ReceiverAddress->getApartment() : '';
         $ReceiverNote =   $ReceiverAddress->getNote() ? $ReceiverAddress->getNote() : '';
         $DropoffStart = !is_null($this->getOtherParameters('dropoff')) ? explode('__', $this->getOtherParameters('dropoff')) : '';
-        $NewDropOffStart = explode('_', $DropoffStart[0]);
-        $NewDropOffEnd = explode('_', $DropoffStart[1]);
-        $DropOffStart_Formated = date_format(date_create($NewDropOffStart[0].' '.str_replace('-', ':', $NewDropOffStart[1])), 'Y-m-d\TH:i:s.000\Z');
-        $DropOffEnd_Formated = date_format(date_create($NewDropOffEnd[0].' '.str_replace('-', ':', $NewDropOffEnd[1])), 'Y-m-d\TH:i:s.000\Z');
+        $DropOffStart_Formated = '';
+        $DropOffEnd_Formated = '';
+        if(isset($DropoffStart[0])) {
+            $NewDropOffStart = explode('_', $DropoffStart[0]);
+            $DropOffStart_Formated = date_format(date_create($NewDropOffStart[0] . ' ' . str_replace('-', ':', $NewDropOffStart[1])), 'Y-m-d\TH:i:s.000\Z');
+        }
+        if(isset($DropoffStart[1])) {
+            $NewDropOffEnd = explode('_', $DropoffStart[1]);
+            $DropOffEnd_Formated = date_format(date_create($NewDropOffEnd[0] . ' ' . str_replace('-', ':', $NewDropOffEnd[1])), 'Y-m-d\TH:i:s.000\Z');
+        }
         $items = [];
         foreach($this->getItems() as $piece){
             $items[] = [

@@ -10,8 +10,7 @@ class ValidateCredentialsResponse extends AbstractResponse
      */
     public function getData()
     {
-
-        return (bool)$this->data;
+        return $this->data[0];
     }
 
 }

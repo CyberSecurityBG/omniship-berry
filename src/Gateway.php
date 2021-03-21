@@ -11,6 +11,7 @@ use Omniship\Berry\Http\ServicesRequest;
 use Omniship\Berry\Http\CancelBillOfLadingRequest;
 use Omniship\Berry\Http\GetPdfRequest;
 use Omniship\Berry\Http\TrackingParcelRequest;
+use Omniship\Berry\Http\UserRegisterRequest;
 use Omniship\Berry\Client;
 
 class Gateway extends AbstractGateway
@@ -45,7 +46,8 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return array(
-            'key' => ''
+            'key' => '',
+            'personal_phone' => ''
         );
     }
 
@@ -60,6 +62,7 @@ class Gateway extends AbstractGateway
     public function setKey($value) {
         return $this->setParameter('key', $value);
     }
+
 
     /**
      * @return mixed

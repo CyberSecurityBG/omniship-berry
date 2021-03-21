@@ -12,8 +12,8 @@ class ValidateCredentialsRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $services = $this->getClient()->SendRequest('get', 'jobs/0', '', '404');
-        return $this->createResponse($services);
+        $getusers = $this->getClient()->SendRequest('get', 'users');
+        return $this->createResponse($getusers);
     }
 
     protected function createResponse($data)

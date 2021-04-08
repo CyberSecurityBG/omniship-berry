@@ -87,7 +87,9 @@ class ShippingQuoteRequest extends AbstractRequest
     public function sendData($data)
     {
         $query = $this->getClient()->SendRequest('post', 'jobs/inquire', $data);
-        $query->is_service = $this->getOtherParameters('is_services');
+        if(!is_null($query)) {
+            $query->is_service = $this->getOtherParameters('is_services');
+        }
         return $this->createResponse($query);
     }
 

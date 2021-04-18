@@ -54,7 +54,7 @@ class ShippingQuoteRequest extends AbstractRequest
                 'width' => (float)$piece->width,
                 'height' => (float)$piece->height,
                 'depth' =>  (float)$piece->depth,
-                'weight' =>  (float)$piece->weight,
+                'weight' =>  (float)$piece,
                 'quantity' => (int)$piece->quantity
             ];
         }

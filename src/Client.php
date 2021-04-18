@@ -48,7 +48,8 @@ class Client
                 'headers' => $this->SetHeader($endpoint, $method, $this->key)
             ]);
             return json_decode($response->getBody()->getContents());
-        } catch (\Exception $e) {
+        } catch (\Exception $e){
+            dd($e);
             if($ignore && $ignore == $e->getCode()){
                 return true;
             }
@@ -66,9 +67,9 @@ class Client
      */
     public function getServiceEndpoint()
     {
-        return static::SERVICE_PRODUCTION_URL;
+      // return static::SERVICE_TESTING_URL;
+         return static::SERVICE_PRODUCTION_URL;
     }
-
     public function CreateUser($data){
         $SendRequest = $this->SendRequest('POST', 'users', $data);
         if($SendRequest != null){
@@ -77,15 +78,24 @@ class Client
             return json_decode($this->error['error']);
         }
     }
-
+    public function GetWarehouse($api_key, $warehouse_id){
+        return $this->SendRequest('GET', 'addresses/'.$warehouse_id,'', '' ,$api_key);
+    }
     public function GetWarehouses($api_key){
         return $this->SendRequest('GET', 'addresses','', '' ,$api_key);
     }
-
+    public function RemoveWarehouse($api_key, $warehouse_id){
+        return $this->SendRequest('DELETE', 'addresses/'.$warehouse_id,'', '' ,$api_key);
+    }
+    public function AddWarehouse($api_key, $data){
+        return $this->SendRequest('POST', 'addresses', $data ,$api_key);
+    }
+    public function EditWarehouse($api_key, $id, $data){
+        return $this->SendRequest('PUT', 'addresses/'.$id, $data ,$api_key);
+    }
     public function GetProfile($api_key){
         return $this->SendRequest('GET', 'users','', '' ,$api_key);
     }
-
     public function GetServices(){
         $AvailableSlots = $this->SendRequest('get', 'packages/next_available_slots?count=6');
         $slots = [];
@@ -102,5 +112,9 @@ class Client
             ];
         }
         return $slots;
+    }
+
+    public function GetCash($api_key, $page){
+        return $this->SendRequest('GET', 'cod_transactions?page='.$page,'', '' ,$api_key);
     }
 }

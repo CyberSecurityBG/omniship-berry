@@ -66,7 +66,7 @@ class Client
      */
     public function getServiceEndpoint()
     {
-      // return static::SERVICE_TESTING_URL;
+       // return static::SERVICE_TESTING_URL;
          return static::SERVICE_PRODUCTION_URL;
     }
     public function CreateUser($data){
@@ -114,6 +114,10 @@ class Client
     }
 
     public function GetCash($api_key, $page){
-        return $this->SendRequest('GET', 'cod_transactions?page='.$page,'', '' ,$api_key);
+        return $this->SendRequest('GET', 'cod_transactions?page='.$page.'&perPage=25','', '' ,$api_key);
+    }
+
+    public function GetBalance($api_key){
+        return $this->SendRequest('GET', 'cod_transactions/balance','', '' ,$api_key);
     }
 }

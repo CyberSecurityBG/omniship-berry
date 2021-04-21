@@ -37,7 +37,6 @@ class ShippingQuoteRequest extends AbstractRequest
                 ],
             ];
         }
-
         $ReceiverAddress = $this->getReceiverAddress();
         $Receiverline1 = $ReceiverAddress->getCity()->getName().', ';
         $Receiverline1 .=  $ReceiverAddress->getStreet()->getName().' '.$ReceiverAddress->getStreetNumber();
@@ -48,13 +47,14 @@ class ShippingQuoteRequest extends AbstractRequest
         $Receiverline2 .= !empty($ReceiverAddress->getApartment()) ? 'ап. '.$ReceiverAddress->getApartment() : '';
         $ReceiverNote =   $ReceiverAddress->getNote() ? $ReceiverAddress->getNote() : '';
         $items = [];
+
         foreach($this->getItems() as $piece){
             $items[] = [
                 'id' => $piece->id,
                 'width' => (float)$piece->width,
                 'height' => (float)$piece->height,
                 'depth' =>  (float)$piece->depth,
-                'weight' =>  (float)$piece,
+                'weight' =>  (float)$piece->weight,
                 'quantity' => (int)$piece->quantity
             ];
         }

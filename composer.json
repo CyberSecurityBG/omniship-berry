@@ -1,37 +1,25 @@
 {
-    "name": "awsbg/omnipay-everypaygr",
-    "type": "library",
-    "description": "EveryPay Greece gateway for Omnipay payment processing library",
-    "keywords": [
-        "gateway",
-        "merchant",
-        "omnipay",
-        "pay",
-        "payment",
-        "everypay greece",
-        "everypay",
-        "purchase"
-    ],
-    "homepage": "https://github.com/CyberSecurityBG/",
-    "license": "MIT",
+    "name": "simexis/omniship-berry",
+
+    "description": "PHP library to communicate with the berry.",
+
+    "require": {
+        "php": "^7",
+        "simexis/omniship": "dev-master"
+    },
+
+    "license": "LGPL-2.1",
+
+    "autoload": {
+        "psr-4": {
+            "Omniship\\Berry\\": "src"
+        }
+    },
+
     "authors": [
         {
             "name": "Stoyan Stoimenov",
             "email": "s.stoimenovbg@gmail.com"
         }
-    ],
-    "autoload": {
-        "psr-4": { "Omnipay\\Everypaygr\\" : "src/" }
-    },
-    "require": {
-        "omnipay/common": "^2.0|^3.0"
-    },
-    "require-dev": {
-        "omnipay/tests": "^2.0|^3.0"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.2.x-dev"
-        }
-    }
+    ]
 }

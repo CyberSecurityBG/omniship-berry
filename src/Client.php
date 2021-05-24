@@ -120,4 +120,12 @@ class Client
     public function GetBalance($api_key){
         return $this->SendRequest('GET', 'cod_transactions/balance','', '' ,$api_key);
     }
+
+    public function GetInvoices($api_key, $page){
+        return $this->SendRequest('GET', 'invoices?page='.$page.'&perPage=25','', '' ,$api_key);
+    }
+
+    public function EditProfile($id, $data, $api_key){
+        return $this->SendRequest('PUT', 'users/'.$id,$data, '' ,$api_key);
+    }
 }

@@ -20,17 +20,24 @@ class ShippingQuoteResponse extends AbstractResponse
         }
         if($this->data->is_service == 1) {
             foreach ($services as $service) {
+                $service[2] = 0.35;
                 $ServivePickUp = Carbon::createFromTimeString($service[0], 'UTC');
                 $ServiceId = $ServivePickUp->format('Y-m-d_H-i');
                 $ServivePickUp->setTimezone('Europe/Sofia');
                 $ServiceDropOff = Carbon::createFromTimeString($service[1], 'UTC');
                 $ServiceId = $ServiceId . '__' . $ServiceDropOff->format('Y-m-d_H-i');
                 $ServiceDropOff->setTimezone('Europe/Sofia');
+                if(count($this->data->packages) > 1){
+                    $name = 'Доставка на ' . $ServivePickUp->format('d.m.Y') . ' от ' . $ServivePickUp->format('H:i') . ' до ' . $ServiceDropOff->format('H:i') . ' (' . count($this->data->packages) . ' пакета)';
+                } else {
+                    $name = 'Доставка на ' . $ServivePickUp->format('d.m.Y') . ' от ' . $ServivePickUp->format('H:i') . ' до ' . $ServiceDropOff->format('H:i');
+
+                }
                 $result->push([
                     'id' => $ServiceId,
-                    'name' => 'Доставка на ' . $ServivePickUp->format('d.m.Y') . ' от ' . $ServivePickUp->format('H:i') . ' до ' . $ServiceDropOff->format('H:i') . ' (' . count($this->data->packages) . ' пакет/а)',
+                    'name' => $name,
                     'description' => null,
-                    'price' => $price,
+                    'price' => $price+$service[2],
                     'pickup_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
                     'pickup_time' => Carbon::createFromFormat('d.m.Y', date_format(date_create($this->data->packages[0]->dropoff_window_start), 'd.m.Y')),
                     'delivery_date' => Carbon::createFromFormat('d.m.Y', date_format(date_create($service[0]), 'd.m.Y')),
@@ -65,6 +72,7 @@ class ShippingQuoteResponse extends AbstractResponse
                 'allowance_insurance' => false,
             ]);
         }
+        dd($result);
         return $result;
     }
 }

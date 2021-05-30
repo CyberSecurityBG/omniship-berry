@@ -72,7 +72,6 @@ class ShippingQuoteResponse extends AbstractResponse
                 'allowance_insurance' => false,
             ]);
         }
-        dd($result);
         return $result;
     }
 }
